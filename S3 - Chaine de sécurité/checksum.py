@@ -13,13 +13,13 @@ def least_significant_byte(hexa):
 
 def calc_checksum(record):
     """Returns the checksum of a record"""
-    sum = 0x0 # Sum of bytes in the record
+    sum = 0 # Sum of bytes in the record
     for i in range(1, len(record) - 2, 2):
         sum += int(record[i:i+2], base=16)
         # print(f"record[i:i+2] {record[i:i+2]}, value {int(record[i:i+2], base=16)}, sum {sum}")
     # print(f"sum {sum} hex {hex(sum)}")
     lsb = least_significant_byte(hex(sum))
-    return hex(abs(twos_comp(int(lsb, base=16), 8)))
+    return hex(twos_comp(int(lsb, base=16), 8))
 
 
 def replace_cheksum(record):
@@ -43,8 +43,9 @@ def decode(record):
 
 
 def main():
-    record1 = ":10010000214601360121470136007EFE09D2190140"
-    print(replace_cheksum(record1))
+    record1 = ":10012000194E79234623965778239EDA3F01B2CAA7"
+    decode(record1)
+    print(calc_checksum(record1))
 
 if __name__ == "__main__":
     # execute only if run as a script
