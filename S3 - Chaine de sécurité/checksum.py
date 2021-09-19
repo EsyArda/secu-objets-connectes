@@ -7,12 +7,13 @@ def twos_comp(val, bits):
 
 def least_significant_byte(hexa):
     """Returns the least significant byte of an hexadecimal value"""
+    # e.g. the last byte
     return hex(int(hexa, 16) & 0b11111111)
 
 
 def calc_checksum(record):
     """Returns the checksum of a record"""
-    sum = 0x0
+    sum = 0x0 # Sum of bytes in the record
     for i in range(1, len(record) - 2, 2):
         sum += int(record[i:i+2], base=16)
         # print(f"record[i:i+2] {record[i:i+2]}, value {int(record[i:i+2], base=16)}, sum {sum}")
@@ -23,7 +24,7 @@ def calc_checksum(record):
 
 def replace_cheksum(record):
     """Replace the checksum with the correct one"""
-    return record[:-2] + calc_checksum(record)[2:]
+    return record[:-2] + calc_checksum(record)[2:] # [2:] to remove the "oX" in the hex value
 
 
 def decode(record):
@@ -34,15 +35,15 @@ def decode(record):
     adress = record[3:7]
     record_type = record[7:9]
     data = ""
-    if record_type == "00":
+    if record_type == "00": # if record == "01" then the data field is empty 
         data = record[9:9 + 2 * int(byte_count, base=16)]
-    checksum = record[-2:] 
+    checksum = record[-2:] # last byte
 
     print(f"byte_count {byte_count}, adress {adress}, record_type {record_type}, data {data}, checksum {checksum}")
 
 
 def main():
-    record1 = ":10455000068183207F0FE07FC0210501301C40369B"
+    record1 = ":10010000214601360121470136007EFE09D2190140"
     print(replace_cheksum(record1))
 
 if __name__ == "__main__":
