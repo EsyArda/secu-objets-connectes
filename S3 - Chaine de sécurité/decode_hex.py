@@ -32,8 +32,16 @@ def decode_file(file_name, out="out.txt"):
                 byte_count = record[1:3]
                 if is_type_data(record):
                     data = record[9:9 + 2 * int(byte_count, base=16)]
-                    f2.write(data + "\n")
+                    str_ascii = hex_to_ascii(data)
+                    f2.write(str_ascii + "\n")
 
+
+def hex_to_ascii(data):
+    s = ""
+    for i in range(0, len(data), 2):
+        if data[i:i+2].isprintable():
+            s += chr(int(data[i:i+2], 16))
+    return s
 
 
 def main():
