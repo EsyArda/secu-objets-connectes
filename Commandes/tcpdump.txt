@@ -1,3 +1,6 @@
 tcpdump port PORT -i INTERFACE -AXS [-v]
 
 // INTERFACE grâce à ifconfig avec IP en 192.XXX
+
+tcpdump [...] | grep -B 1 -A 4 "G3"
+// A modif After et Before
