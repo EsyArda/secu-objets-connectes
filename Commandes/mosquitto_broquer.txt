@@ -1,0 +1,5 @@
+mosquitto -v -c CONFIG_FILE -p PORT
+
+mosquitto_passwd -c /etc/mosquitto/passwd username
+
+mosquitto_passwd -b passwordfile username password
