@@ -1,0 +1,3 @@
+tcpdump port PORT -i INTERFACE -AXS [-v]
+
+// INTERFACE grâce à ifconfig avec IP en 192.XXX
