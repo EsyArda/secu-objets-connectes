@@ -1,3 +1,5 @@
+import time
+
 def decode_line(record):
     """Displays each field of a record"""
     if record[0] != ":":
@@ -24,28 +26,36 @@ def data_from_record(record):
     return record[9:9 + 2 * int(byte_count, base=16)]
 
 
-def decode_file(file_name, out="out.txt"):
+def decode_file(file_name, out="out.txt", length=0):
     """Returns data of a hex file in a byte array"""
     with open(file_name, "r") as f:
-        with open(out, "w") as f2:
+        with open(out, "w", encoding="utf-8") as f2:
             for record in f:
                 byte_count = record[1:3]
                 if is_type_data(record):
                     data = record[9:9 + 2 * int(byte_count, base=16)]
-                    str_ascii = hex_to_ascii(data)
+                    str_ascii = hex_to_ascii(data, length_min=length)
                     f2.write(str_ascii + "\n")
 
 
-def hex_to_ascii(data):
+def hex_to_ascii(data, length_min=0):
     s = ""
+    temp_s = ""
     for i in range(0, len(data), 2):
         if data[i:i+2].isprintable():
-            s += chr(int(data[i:i+2], 16))
+            temp_s += chr(int(data[i:i+2], 16))
+        else:
+            if len(temp_s) >= length_min:
+                s += temp_s
+                temp_s = ""
+            temp_s = ""
+    if len(temp_s) >= length_min:
+        s += temp_s
     return s
 
 
 def main():
-    decode_file("firmware_tp3_v2.33.hex")
+    decode_file("./S3 - Chaine de sécurité/firmware_tp3_v2.33.hex", length=3)
 
 
 if __name__ == "__main__":
