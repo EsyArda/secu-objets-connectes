@@ -26,8 +26,8 @@ def data_from_record(record):
     return record[9:9 + 2 * int(byte_count, base=16)]
 
 
-def decode_file(file_name, out="out.txt", length=0):
-    """Returns data of a hex file in a byte array"""
+def decode_file(file_name, out="out.txt", length=1):
+    """Returns data of a hex file file_name to an ascii text file out"""
     with open(file_name, "r") as f:
         with open(out, "w", encoding="utf-8") as f2:
             for record in f:
