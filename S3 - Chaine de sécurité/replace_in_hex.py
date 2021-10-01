@@ -7,6 +7,8 @@ def replace_in_hex(old, new, file_in, file_out):
     old_hex = ascii_to_hex(old).upper()
     new_hex = ascii_to_hex(new).upper()
     
+    line_nb = 0
+
     with open(file_in, "r", encoding="utf-8") as f:
         with open(file_out, "w", encoding="utf-8") as out:
             for line in f:
@@ -14,9 +16,10 @@ def replace_in_hex(old, new, file_in, file_out):
                     new_line = replace_line(line, old_hex, new_hex)
                     # replace checksum
                     out.write(new_line)
-                    print(f"{line} a été remplacé par {new_line}")
+                    print(f"{line_nb} : {line} a été remplacé par {new_line}")
                 else:
                     out.write(line)
+            line_nb += 1
 
 
 def replace_line(line, old, new):
