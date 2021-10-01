@@ -4,3 +4,5 @@ tcpdump port PORT -i INTERFACE -AXS [-v]
 
 tcpdump [...] | grep -B 1 -A 4 "G3"
 // A modif After et Before
+
+// rechercher le CLIENT_ID et dans la même trame il y a le passwd et username
