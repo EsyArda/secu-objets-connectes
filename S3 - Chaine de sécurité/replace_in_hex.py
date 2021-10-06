@@ -1,5 +1,6 @@
 import lib_hex.checksum2 as check
 import lib_hex.decode_hex as decode
+from pycipher import Beaufort
 
 
 def replace_in_hex(old, new, file_in, file_out):
@@ -48,10 +49,29 @@ def ascii_to_hex(str):
     """Returns hex code from ascii string"""
     return str.encode("ascii").hex()
 
+def cipher_decrypt(encoded, key):
+    """Returns decoded cipher beaufort code"""
+    from string import ascii_uppercase
+    dict1 = {char: i for i, char in enumerate(ascii_uppercase)}
+    dict2 = {i: char for i, char in enumerate(ascii_uppercase)}
+    
+    txt = ""
+    i = 0
+    for c in encoded:
+        if c == "/":
+            txt += "/"
+        else:
+            x = (dict1[c] + dict1[key[i]] + 26) % 26
+            i += 1
+            txt += dict2[x]
+    return txt
+
+
 
 def main():
-    replace_in_hex("EDUROAM", "ZZ_SH", "./S3 - Chaine de sécurité/firmware_tp3_v2.33.hex", "./S3 - Chaine de sécurité/out.hex")
-    decode.decode_file("./S3 - Chaine de sécurité/out.hex", out="./S3 - Chaine de sécurité/decode.txt")
+    # replace_in_hex("EDUROAM", "ZZ_SH", "./S3 - Chaine de sécurité/firmware_tp3_v2.33.hex", "./S3 - Chaine de sécurité/out.hex")
+    # decode.decode_file("./S3 - Chaine de sécurité/out.hex", out="./S3 - Chaine de sécurité/decode.txt")
+    print(Beaufort('KLE').decipher('MGJNGS_EYLYKZ'))
 
 
 if __name__ == "__main__":

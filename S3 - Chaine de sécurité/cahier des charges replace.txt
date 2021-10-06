@@ -1,0 +1,8 @@
+1. donner le nom réseau et nouveau réseau
+2. convertir en hexa les 2
+3. le chercher dans le texte le réseau
+4. remplacer par nouveau réseau en hexa
+4.1. remplacer LEDs
+5. corriger checksum
+6. enregistrer bin
+7. compiler et mettre dans la carte
