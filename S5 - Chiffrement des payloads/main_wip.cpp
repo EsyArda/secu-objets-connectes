@@ -3,7 +3,12 @@
 using namespace std;
 
 char * Xor(char * in,int inSize,char * key,int keySize,char * out){
-	//TODO
+	int it_key = 0;
+    for (int i=0; i<inSize; i++) {
+        out[i] = (in[i] ^ key[it_key]);
+        it_key = (i + 1) % inSize;
+    }
+    out[i] = '\0'
 	return out;
 }
 
@@ -20,5 +25,8 @@ int main()
     cout << Xor(tab3,23,"F5",2,tmp) << endl;
     cout << Xor(tab4,23,"ZZ2_F5",6,tmp) << endl;
     cout << Xor(tab4,23,Xor("\x1c\x6f\x74\x6a\x00\x00",6,"F5",2,tmp1),6,tmp) << endl;
+    
+    // char tmp2[24];
+    // cout << Xor(Xor(tab1,23,"F",1,tmp), 23, "F", 1, tmp2) << endl;
     return 0;
 }
