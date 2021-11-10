@@ -12,7 +12,7 @@ def EncodeXor(tabMessage,tabKey):
     i = 0
     j = 0
     for c in tabMessage:
-        res[j] = chr(ord(c) ^ ord(tabKey[i]))
+        res[j] = c ^ tabKey[i]
         i = (i + 1) % len(tabKey)
         j+=1
     return res
@@ -28,7 +28,7 @@ def DecodeXor(tabMessage,tabKey):
     i = 0
     j = 0
     for c in tabMessage:
-        res[j] = chr(ord(c) ^ ord(tabKey[i]))
+        res[j] = c ^ tabKey[i]
         i = (i + 1) % len(tabKey)
         j+=1
     return res
@@ -117,4 +117,5 @@ def main():
 
 if __name__ == '__main__':
     print(EncodeXor(b"/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#",b"XORKEYDESPROFS"))
+    print(DecodeXor(EncodeXor(b"/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#",b"XORKEYDESPROFS"),b"XORKEYDESPROFS"))
     main()
