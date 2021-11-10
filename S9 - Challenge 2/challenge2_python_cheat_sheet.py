@@ -57,12 +57,15 @@ def EncodeAES_ECB(strMessage, tabKey):
         La taille de chaine est quelconque et sera complétée par des
         caractères espace si nécessaire. tabKey est un tableau 16 éléments.
         Avant chiffrement la chaine est encodée en utf8 """
-    while (len(strMessage) < 16):
-        strMessage += ' '
-    cipher = Cipher(algorithms.AES(bytearray(tabKey)), modes.ECB())
-    encryptor = cipher.encryptor()
-    ct = encryptor.update(toTab(strMessage)) + encryptor.finalize()
-    return ct
+    if (len(strMessage)>16):
+        return EncodeAES_ECB(strMessage[0:16],tabKey)+EncodeAES_ECB(strMessage[16:],tabKey)
+    else:
+        while (len(strMessage) < 16):
+            strMessage += ' '
+        cipher = Cipher(algorithms.AES(bytearray(tabKey)), modes.ECB())
+        encryptor = cipher.encryptor()
+        ct = encryptor.update(toTab(strMessage)) + encryptor.finalize()
+        return ct
 
 
 def DecodeAES_ECB(tabMessage, tabKey):
@@ -158,8 +161,13 @@ def main():
 
 
 if __name__ == '__main__':
-    print(EncodeXor(
-        b"/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#", b"XORKEYDESPROFS"))
-    print(DecodeXor(EncodeXor(b"/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#",
-          b"XORKEYDESPROFS"), b"XORKEYDESPROFS"))
+    # print(EncodeXor(
+    #     b"/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#", b"XORKEYDESPROFS"))
+    # print(DecodeXor(EncodeXor(b"/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#",
+    #       b"XORKEYDESPROFS"), b"XORKEYDESPROFS"))
+    # #######
+    # print(EncodeAES_ECB(
+    #     "/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#", [161, 216, 149, 60, 177, 180, 108, 234, 176, 12, 149, 45, 255, 157, 80, 136]))
+    print(DecodeAES_ECB(EncodeAES_ECB(
+        "/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#", [161, 216, 149, 60, 177, 180, 108, 234, 176, 12, 149, 45, 255, 157, 80, 136]),[161, 216, 149, 60, 177, 180, 108, 234, 176, 12, 149, 45, 255, 157, 80, 136]))
     main()
