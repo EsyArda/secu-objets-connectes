@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import base64
+import os
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 
 def EncodeXor(tabMessage, tabKey):
@@ -26,14 +28,7 @@ def DecodeXor(tabMessage, tabKey):
     """ Retourne un tableau d'octets."""
    # print("Message a decoder : "+tabMessage)
    # print("Cle : "+tabKey)
-    res = bytearray(len(tabMessage))
-    i = 0
-    j = 0
-    for c in tabMessage:
-        res[j] = c ^ tabKey[i]
-        i = (i + 1) % len(tabKey)
-        j += 1
-    return res
+    return EncodeXor(tabMessage, tabKey)
 
 
 def Indice(table, element):
@@ -62,12 +57,21 @@ def EncodeAES_ECB(strMessage, tabKey):
         La taille de chaine est quelconque et sera complétée par des
         caractères espace si nécessaire. tabKey est un tableau 16 éléments.
         Avant chiffrement la chaine est encodée en utf8 """
+    while (len(strMessage) < 16):
+        strMessage += ' '
+    cipher = Cipher(algorithms.AES(bytearray(tabKey)), modes.ECB())
+    encryptor = cipher.encryptor()
+    ct = encryptor.update(toTab(strMessage)) + encryptor.finalize()
+    return ct
 
 
 def DecodeAES_ECB(tabMessage, tabKey):
     """ Dechiffrement AES ECB de tabMessage. La clef tabKey est un tableau de 16 éléments.
         Retourne un tableau d'octets. Les caractères espace en fin de
         tableau sont supprimés."""
+    cipher = Cipher(algorithms.AES(bytearray(tabKey)), modes.ECB())
+    decryptor = cipher.decryptor()
+    return decryptor.update(tabMessage).strip()
 
 
 def Contient(aiguille, chaine):
@@ -134,9 +138,9 @@ def main():
     print("Test B64_Encode", EncodeBase64(
         b"Une Chaine") == b"VW5lIENoYWluZQ==")
     print("Test B64_Decode", DecodeBase64("VW5lIENoYWluZQ==") == b"Une Chaine")
-    print(EncodeAES_ECB("Elements", [161, 216, 149, 60, 177, 180, 108, 234, 176, 12,
-                                     149, 45, 255, 157, 80, 136]) == b'Z\xf5T\xef\x9f\x8bg\x15\xb3E\xe7&gm\x96\x1d')
-    print(DecodeAES_ECB(b'Z\xf5T\xef\x9f\x8bg\x15\xb3E\xe7&gm\x96\x1d', [
+    print("Test AES_ECB encode", EncodeAES_ECB("Elements", [161, 216, 149, 60, 177, 180, 108, 234, 176, 12,
+                                                            149, 45, 255, 157, 80, 136]) == b'Z\xf5T\xef\x9f\x8bg\x15\xb3E\xe7&gm\x96\x1d')
+    print("Test AES_ECB decode", DecodeAES_ECB(b'Z\xf5T\xef\x9f\x8bg\x15\xb3E\xe7&gm\x96\x1d', [
           161, 216, 149, 60, 177, 180, 108, 234, 176, 12, 149, 45, 255, 157, 80, 136]).strip() == b"Elements")
     print("Test Contient 1", Contient("OK", "Le resultat est OK !") == True)
     print("Test Contient 2", Contient("OK", "Le resultat est Ok !") == False)
@@ -154,6 +158,8 @@ def main():
 
 
 if __name__ == '__main__':
-    print(EncodeXor(b"/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#",b"XORKEYDESPROFS"))
-    print(DecodeXor(EncodeXor(b"/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#",b"XORKEYDESPROFS"),b"XORKEYDESPROFS"))
+    print(EncodeXor(
+        b"/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#", b"XORKEYDESPROFS"))
+    print(DecodeXor(EncodeXor(b"/ISIMA/SECRET_YIDIISTSA/CHALLENGE_1/DEFI_6/GROUPE_XX/LEDS/#",
+          b"XORKEYDESPROFS"), b"XORKEYDESPROFS"))
     main()
